@@ -1,5 +1,5 @@
 import {Collection, Db, Document, MongoClient} from "mongodb"
-require('dotenv').config()
+import {CREDENTIALS} from "../../lib/.credentials.js"
 
 type MongoDBDataSourceProps = {
     db: DBProps,
@@ -22,7 +22,7 @@ export default class BaseMongoDBStore<TDocument extends Document> {
     protected readonly collection : Collection<TDocument>
 
     constructor(props: MongoDBDataSourceProps) {
-        const uri = props.client.uri || process.env.MONGO_MONITORING_URI
+        const uri = props.client.uri || `mongodb://${CREDENTIALS.APP.USER}:${CREDENTIALS.APP.PWD}@localhost:27017`
         if (uri === undefined) throw new Error("In enviroment does not have uri for MongoClient")
         this.client = new MongoClient(uri)
         const db: Db = this.client.db(props.db.name || "networkMonitoring")
